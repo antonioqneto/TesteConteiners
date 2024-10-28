@@ -8,9 +8,10 @@ namespace TesteConteiners.Data.Models
         [Key]
         public int Id { get; set; }
         [ForeignKey("Cliente")]
-        public int ClienteId { get; set; }
+        public int? ClienteId { get; set; }
         [NotMapped]
         public string NomeCliente { get; set; }
+        [MaxLength(11)]
         public string NumeroIdentificao { get; set; }
         public ConteinerEnums.Tipo Tipo { get; set; }
         public ConteinerEnums.Status Status { get; set; }

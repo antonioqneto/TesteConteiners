@@ -8,7 +8,7 @@ namespace TesteConteiners.Data.Models
         [Key]
         public int Id { get; set; }
         [ForeignKey("Conteiner")]
-        public int ConteinerId { get; set; }
+        public int? ConteinerId { get; set; }
         [NotMapped]
         public string NomeConteiner { get; set; }
         public ConteinerEnums.TipoMovimentacao Tipo { get; set; }
