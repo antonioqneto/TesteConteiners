@@ -48,7 +48,7 @@ namespace TesteConteiners.Data
 
             modelBuilder.Entity<Conteiner>().HasData(
                 new Conteiner { Id = 1, ClienteId = 1, NumeroIdentificao = "ABCD1234567", Tipo = ConteinerEnums.Tipo.Vinte, Status = ConteinerEnums.Status.Cheio, Categoria = ConteinerEnums.Categoria.Importacao },
-                new Conteiner { Id = 2, ClienteId = 2, NumeroIdentificao = "BCDE7654321", Tipo = ConteinerEnums.Tipo.Quarenta, Status = ConteinerEnums.Status.Vazio, Categoria = ConteinerEnums.Categoria.Exportacao },
+                new Conteiner { Id = 2, ClienteId = 2, NumeroIdentificao = "BCDE6654321", Tipo = ConteinerEnums.Tipo.Quarenta, Status = ConteinerEnums.Status.Vazio, Categoria = ConteinerEnums.Categoria.Exportacao },
                 new Conteiner { Id = 3, ClienteId = 2, NumeroIdentificao = "BCDE7654321", Tipo = ConteinerEnums.Tipo.Quarenta, Status = ConteinerEnums.Status.Cheio, Categoria = ConteinerEnums.Categoria.Importacao }
             );
 

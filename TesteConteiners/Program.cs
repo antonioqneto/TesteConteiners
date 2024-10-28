@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using TesteConteiners.Components;
 using TesteConteiners.Data;
+using TesteConteiners.Services;
+using TesteMovimentacoes.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("connectionString"));
 });
+
+builder.Services.AddScoped<ConteinerService>();
+builder.Services.AddScoped<MovimentacaoService>();
 
 var app = builder.Build();
 
