@@ -1,5 +1,6 @@
 ﻿using TesteConteiners.Data;
 using TesteConteiners.Data.Models;
+using static TesteConteiners.Data.Models.ConteinerEnums;
 
 namespace TesteMovimentacoes.Services
 {
@@ -27,6 +28,26 @@ namespace TesteMovimentacoes.Services
             var result = _db.Movimentacoes.ToList();
             return result;
         }
+        
+        public List<MovimentacaoViewModel> GetDadosRelatorio()
+        {
+            var result = (from cl in _db.Clientes
+                          join c in _db.Conteiners on cl.Id equals c.ClienteId into cg
+                          from c in cg.DefaultIfEmpty()
+                          join m in _db.Movimentacoes on c.Id equals m.ConteinerId into mg
+                          from m in mg.DefaultIfEmpty()
+                          select new MovimentacaoViewModel
+                          {
+                              ClienteId = cl.Id,
+                              NomeCliente = cl.Nome,
+                              Categoria = c != null ? c.Categoria : default,
+                              TipoMovimentacao = m != null ? m.Tipo : default
+                          }).ToList();
+
+            return result;
+        }
+
+
         public void UpdateMovimentacao(Movimentacao Movimentacao)
         {
             _db.Movimentacoes.Update(Movimentacao);

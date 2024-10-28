@@ -17,6 +17,11 @@ namespace TesteConteiners.Services
             _db.Conteiners.Add(conteiner);
             _db.SaveChanges();
         }
+        public List<Cliente> GetClientes()
+        {
+            var result = _db.Clientes.ToList();
+            return result;
+        }
         public Conteiner GetConteinerById(int id)
         {
             var result = _db.Conteiners.Where(x => x.Id == id).FirstOrDefault();
@@ -25,6 +30,14 @@ namespace TesteConteiners.Services
         public List<Conteiner> GetConteiner()
         {
             var result = _db.Conteiners.ToList();
+
+            if (result == null) return new();
+
+            result.ForEach(x =>
+            {
+                x.NomeCliente = _db.Clientes?.FirstOrDefault(y => y.Id == x.ClienteId)?.Nome ?? string.Empty;
+            });
+
             return result;
         }
         public void UpdateConteiner(Conteiner conteiner)
@@ -32,10 +45,12 @@ namespace TesteConteiners.Services
             _db.Conteiners.Update(conteiner);
             _db.SaveChanges();
         }
-        public void DeleteConteiner(Conteiner conteiner)
+        public bool DeleteConteiner(Conteiner conteiner)
         {
-            _db.Conteiners.Remove(conteiner);
-            _db.SaveChanges();
+            var result = _db.Conteiners.Remove(conteiner);
+            if (result == null) return false;
+
+            return _db.SaveChanges() > 0;
         }
     }
 }

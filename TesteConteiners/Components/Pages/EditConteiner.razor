@@ -1,0 +1,109 @@
+﻿@page "/EditConteiner/{id}"
+@rendermode InteractiveServer
+
+@inject ConteinerService _conteinerService
+@inject NavigationManager _objNavigationManager
+
+<PageTitle>Conteiners</PageTitle>
+<h2>Adicionar Conteiner</h2>
+<hr />
+
+
+<EditForm Model="objConteiner"
+          OnValidSubmit="EditarConteiner">
+    <FluentValidationValidator />
+
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label class="col-form-label">Tipo</label>
+                <InputSelect @bind-Value="objConteiner.ClienteId">
+                    @foreach (var cliente in listaClientes)
+                    {
+                        <option value="@cliente.Id">@cliente.Nome</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="form-group">
+                <label class="col-form-label">Numero</label>
+                <InputText @bind-Value="objConteiner.NumeroIdentificao"></InputText>
+            </div>
+
+            <div class="form-group">
+                <label class="col-form-label">Tipo</label>
+                <InputSelect @bind-Value="objConteiner.Tipo">
+                    @foreach (var value in Enum.GetValues(typeof(ConteinerEnums.Tipo)))
+                    {
+                        <option>@value</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="form-group">
+                <label class="col-form-label">Tipo</label>
+                <InputSelect @bind-Value="objConteiner.Status">
+                    @foreach (var value in Enum.GetValues(typeof(ConteinerEnums.Status)))
+                    {
+                        <option>@value</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="form-group">
+                <label class="col-form-label">Tipo</label>
+                <InputSelect @bind-Value="objConteiner.Categoria">
+                    @foreach (var value in Enum.GetValues(typeof(ConteinerEnums.Categoria)))
+                    {
+                        <option>@value</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+        <div class="col-6">
+            <ValidationSummary />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <button type="button" class="btn btn-primary">Salvar</button>
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancelar" />
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+    [Parameter] public string id { get; set; }
+
+    List<Cliente> listaClientes = new();
+    Conteiner objConteiner = new();
+    string message = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        int.TryParse(id, out int idToInt);
+
+        if (idToInt > 0)
+        {
+            objConteiner = await Task.Run(() => _conteinerService.GetConteinerById(idToInt));
+        }
+        else
+        {
+            message = "Falha na consulta";
+        }
+
+        listaClientes = _conteinerService.GetClientes();
+    }
+
+    protected void EditarConteiner()
+    {
+        _conteinerService.CreateConteiner(objConteiner);
+    }
+    void Cancel()
+    {
+        _objNavigationManager.NavigateTo("conteiners");
+    }
+}

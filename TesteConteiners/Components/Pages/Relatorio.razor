@@ -1,0 +1,61 @@
+﻿@page "/relatorio"
+
+@rendermode InteractiveServer
+
+@inject MovimentacaoService _movimentacaoService
+
+<PageTitle>Relatório</PageTitle>
+
+<h3>Clientes</h3>
+<div class="row">
+    @foreach(var cliente in clientes)
+    {
+        var dadosCliente = listMovimentacoes.Where(x => x.ClienteId == cliente).ToList();
+        var relatorio = new RelatorioMovimentacoes(dadosCliente);
+
+        <div class="col-3">
+            <h3>Cliente: @relatorio.NomeCliente</h3>
+
+            <p> Embarque: @relatorio.TotalEmbarque </p>
+            <p> Descarga: @relatorio.TotalDescarga </p>
+            <p> GateIn: @relatorio.TotalGateIn </p>
+            <p> GateOut: @relatorio.TotalGateOut </p>
+            <p> Reposicionamento: @relatorio.TotalReposicionamento </p>
+            <p> Pesagem: @relatorio.TotalPesagem </p>
+            <p> Scanner: @relatorio.TotalScanner </p>
+
+            <p><strong>Total Movimentações: @relatorio.TotalMovimentacoes</strong></p>
+       </div>
+    }
+</div>
+
+<hr />
+
+@{
+    var dadosMovimentacoes = listMovimentacoes.Where(x => x.Categoria != 0 && x.TipoMovimentacao != 0);
+}
+<h3> Sumário</h3>
+
+<div class="d-flex justify-content-between">
+    <div>
+        <p>Total de Movimentações: @dadosMovimentacoes.Count()</p>
+    </div>
+    <div>
+        <p>IMPORTAÇÕES: @dadosMovimentacoes.Count(x => x.Categoria == ConteinerEnums.Categoria.Importacao)</p>
+    </div>
+    <div>
+        <p>EXPORTAÇÕES: @dadosMovimentacoes.Count(x => x.Categoria == ConteinerEnums.Categoria.Exportacao)</p>
+    </div>
+</div>
+
+
+@code {
+    List<MovimentacaoViewModel> listMovimentacoes = new();
+    List<int?> clientes = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        listMovimentacoes = _movimentacaoService.GetDadosRelatorio();
+        clientes = listMovimentacoes.Select(x => x.ClienteId).Distinct().ToList();
+    }
+}

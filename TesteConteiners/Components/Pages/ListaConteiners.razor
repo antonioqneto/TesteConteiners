@@ -1,0 +1,72 @@
+﻿@page "/conteiners"
+
+@attribute [StreamRendering]
+
+@inject ConteinerService _conteinerService
+
+<PageTitle>Conteiners</PageTitle>
+
+<h1>Informações dos Conteiners</h1>
+
+<a class="nav-link" href="AddConteiner">
+    <span class="btn btn-primary" aria-hidden="true">Adicionar</span>
+</a>
+
+<hr />
+
+@if (objConteiners == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Numero</th>
+                <th>Cliente</th>
+                <th>Tipo</th>
+                <th>Status</th>
+                <th>Categoria</th>
+                <th>Opções</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var conteiner in objConteiners)
+            {
+                <tr>
+                    <td>@conteiner.Id</td>
+                    <td>@conteiner.NumeroIdentificao</td>
+                    <td>@conteiner.NomeCliente</td>
+                    <td>@conteiner.Tipo</td>
+                    <td>@conteiner.Status</td>
+                    <td>@conteiner.Categoria</td>
+                    <td>
+                        <a class="nav-link" href="EditConteiner/@conteiner.Id">
+                            <span class="btn btn-primary">Editar</span>
+                        </a>
+                            <button class="btn btn-primary" @onclick="@(() => DeleteConteiner(conteiner))">Deletar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<Conteiner> objConteiners;
+
+    protected override async Task OnInitializedAsync()
+    {
+        objConteiners = await Task.Run(() => _conteinerService.GetConteiner());
+    }
+
+    void DeleteConteiner(Conteiner conteiner)
+    {
+        var result = _conteinerService.DeleteConteiner(conteiner);
+        if (result != null) objConteiners.Remove(conteiner);
+        StateHasChanged();
+    }
+
+}
